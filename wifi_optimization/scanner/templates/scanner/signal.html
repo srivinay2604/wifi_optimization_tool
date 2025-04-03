@@ -1,22 +1,91 @@
-<h2><b>WiFi Network Scan</b></h2>
-<table border="1">
-    <tr>
-        <th>SSID</th>
-        <th>Signal Strength (dBm)</th>
-        <th>Channel</th>
-        <th>Frequency (MHz)</th>
-        <th>Security</th>
-    </tr>
-    {% for net in networks %}
-    <tr>
-        <td>{{ net.ssid }}</td>
-        <td>{{ net.signal_strength }}</td>
-        <td>{{ net.channel }}</td>
-        <td>{{ net.frequency }}</td>
-        <td>{{ net.security }}</td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="5">No networks found</td></tr>
-    {% endfor %}
-</table>
-<a href="{% url 'dashboard' %}">Back to Dashboard</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WiFi Network Scan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #111;
+            color: #fff;
+            padding: 20px;
+        }
+        h2 {
+            color: #ff0000;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            background-color: #222;
+            color: white;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+        }
+        th, td {
+            border: 2px solid #ff0000;
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #ff0000;
+            color: black;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #333;
+        }
+        tr:nth-child(odd) {
+            background-color: #222;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            text-decoration: none;
+            background-color: #ff0000;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        a:hover {
+            background-color: black;
+            color: #ff0000;
+            border: 2px solid #ff0000;
+        }
+    </style>
+</head>
+<body>
+
+    <h2><b>WiFi Network Scan</b></h2>
+
+    <table>
+        <tr>
+            <th>SSID</th>
+            <th>Signal Strength (dBm)</th>
+            <th>Channel</th>
+            <th>Frequency (MHz)</th>
+            <th>Security</th>
+        </tr>
+        {% for net in networks %}
+        <tr>
+            <td>{{ net.ssid }}</td>
+            <td>{{ net.signal_strength }}</td>
+            <td>{{ net.channel }}</td>
+            <td>{{ net.frequency }}</td>
+            <td>{{ net.security }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">No networks found</td></tr>
+        {% endfor %}
+    </table>
+
+    <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+
+</body>
+</html>

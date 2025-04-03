@@ -1,6 +1,55 @@
 from django.shortcuts import render
 import subprocess
 import speedtest
+import os
+import socket
+import uuid
+def suggest_best_channel(request):
+    try:
+        result = subprocess.run(
+            ["/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport", "-s"],
+            capture_output=True, text=True
+        )
+        lines = result.stdout.strip().split("\n")[1:]
+        channels = {}
+
+        for line in lines:
+            parts = line.split()
+            if len(parts) < 5:
+                continue
+            channel = parts[-4]
+            channels[channel] = channels.get(channel, 0) + 1
+        
+        best_channel = min(channels, key=channels.get) if channels else "No Data"
+    except Exception as e:
+        best_channel = f"Error: {str(e)}"
+
+    return render(request, 'scanner/best_channel.html', {"best_channel": best_channel})
+
+def get_network_info(request):
+    try:
+        hostname = socket.gethostname()
+        ip_address = socket.gethostbyname(hostname)
+        mac_address = ':'.join(['{:02x}'.format((uuid.getnode() >> elements) & 0xff) for elements in range(0, 2*6, 8)][::-1])
+        network_info = {
+            "hostname": hostname,
+            "ip_address": ip_address,
+            "mac_address": mac_address,
+        }
+    except Exception as e:
+        network_info = {"error": str(e)}
+
+    return render(request, 'scanner/network_info.html', {"network_info": network_info})
+
+
+def ping_test(request):
+    try:
+        response = subprocess.run(["ping", "-c", "4", "8.8.8.8"], capture_output=True, text=True)
+        output = response.stdout
+    except Exception as e:
+        output = f"Error: {str(e)}"
+    
+    return render(request, 'scanner/ping_test.html', {'ping_output': output})
 
 def scan_wifi(request):
     try:
